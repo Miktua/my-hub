@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Github, Linkedin, Mail } from 'lucide-react'
 import Image from 'next/image'
 import axios from 'axios'
+import { Card, CardContent } from '@/components/ui/card'
 export default function DeveloperProfile() {
   const [activeTab, setActiveTab] = useState('skills')
 
@@ -19,13 +20,9 @@ export default function DeveloperProfile() {
   ]
   const tabs = ['skills', 'employment', 'projects', 'contact']
 
-  const signIn = async (provider: string) => {
-    await axios.post('/api/auth', { type: provider, email: 'dmytro.pustovitenko@gmail.com', password: '123456' });
-  };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-      <button onClick={() => signIn('google')}>Sign in with Google</button>
+    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
         <header className="text-center mb-12">
           <Image
@@ -34,12 +31,11 @@ export default function DeveloperProfile() {
             className="mx-auto h-32 w-32 rounded-full mt-5 object-cover"
             src="/profile.jpg"
             alt="Profile"
-            // objectFit="cover"
           />
-          <h1 className="mt-4 text-3xl font-extrabold text-gray-900 sm:text-4xl">
+          <h1 className="mt-4 text-3xl font-extrabold sm:text-4xl">
             Dmytro Pustovitenko
           </h1>
-          <p className="mt-2 text-xl text-gray-500">Frontend Developer</p>
+          <p className="mt-2 text-xl">Frontend Developer</p>
         </header>
 
         <nav className="mb-8">
@@ -50,8 +46,8 @@ export default function DeveloperProfile() {
                   onClick={() => setActiveTab(tab)}
                   className={`px-3 py-2 rounded-md text-sm font-medium ${
                     activeTab === tab
-                      ? 'bg-blue-500 text-white'
-                      : 'text-gray-700 hover:bg-gray-200'
+                      ? 'bg-primary text-primary-foreground'
+                      : 'hover:bg-accent'
                   }`}
                 >
                   {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -69,9 +65,12 @@ export default function DeveloperProfile() {
                 {skills.map((skill) => (
                   <li
                     key={skill}
-                    className="bg-white rounded-lg p-3 shadow text-center"
                   >
-                    {skill}
+                    <Card>
+                      <CardContent className='grid place-items-center p-3'>
+                        {skill}
+                      </CardContent>
+                    </Card>
                   </li>
                 ))}
               </ul>
@@ -89,9 +88,9 @@ export default function DeveloperProfile() {
               <h2 className="text-2xl font-bold mb-4">Projects</h2>
               <ul className="space-y-4">
                 {projects.map((project) => (
-                  <li key={project.name} className="bg-white rounded-lg p-4 shadow">
+                  <li key={project.name} className="bg-card text-card-foreground rounded-lg p-4 shadow">
                     <h3 className="font-semibold">{project.name}</h3>
-                    <p className="text-gray-600">{project.description}</p>
+                    <p className="text-muted-foreground">{project.description}</p>
                   </li>
                 ))}
               </ul>
@@ -104,7 +103,7 @@ export default function DeveloperProfile() {
               <div className="flex justify-center space-x-4">
                   {contacts.map((contact) => (
                     <a key={contact.name} href={contact.url} target="_blank" rel="noopener noreferrer">
-                      <contact.Icon className="h-8 w-8" />
+                      <contact.Icon className="h-8 w-8 hover:text-primary" />
                     </a>
                   ))}
               </div>

@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.scss";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { ThemeSwitcher } from "@/components/ThemeSwitcher";
+import { Home } from "lucide-react";
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -35,10 +39,17 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             {/* header */}
-            {/* <div className="flex justify-between items-center p-4">
-              <h1 className="text-2xl font-bold">Mikteor's profile</h1>
+            <div className="grid grid-cols-[1fr_auto_auto] p-4 gap-2">
+              <Link href="/">
+                <Button variant="link">
+                  <Home />
+                </Button>
+              </Link>
+              <Link href="/auth">
+                <Button>Login</Button>
+              </Link>
               <ThemeSwitcher />
-            </div> */}
+            </div>
             {children}
           </ThemeProvider>
       </body>
