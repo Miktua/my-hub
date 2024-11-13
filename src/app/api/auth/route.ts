@@ -20,15 +20,15 @@ const generateToken = (userId: string) => {
 };
 
 // Helper function to create session
-const createSession = async (userId: string, token: string) => {
-    // return await prisma.session.create({
-    //     data: {
-    //         userId,
-    //         token,
-    //         expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
-    //     }
-    // });
-};
+// const createSession = async (userId: string, token: string) => {
+//     return await prisma.userSession.create({
+//         data: {
+//             userId,
+//             token,
+//             expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
+//         }
+//     });
+// };
 interface RequestBody {
     type: string;
     email?: string;
@@ -36,7 +36,12 @@ interface RequestBody {
     name?: string;
     idToken?: string;
     hash?: string;
-    telegramData?: any;
+    telegramData?: {
+        id: string;
+        first_name: string;
+        last_name: string;
+        username: string;
+    };
 }
 // Email-password sign in
 export async function POST(request: Request) {
@@ -61,7 +66,7 @@ export async function POST(request: Request) {
                 }
 
                 let validPassword = Boolean(user.password)
-                user.password && bcrypt.compare(password, user.password,(_,res)=>{validPassword=res});
+                if (user.password) bcrypt.compare(password, user.password,(_,res)=>{validPassword=res});
                 if (!validPassword) {
                     return NextResponse.json(
                         { error: 'Invalid credentials' },
@@ -70,7 +75,7 @@ export async function POST(request: Request) {
                 }
 
                 const token = generateToken(user.id);
-                await createSession(user.id, token);
+                // await createSession(user.id, token);
 
                 return NextResponse.json({ token, userId: user.id });
             }
@@ -108,7 +113,7 @@ export async function POST(request: Request) {
                 });
 
                 const token = generateToken(user.id);
-                await createSession(user.id, token);
+                // await createSession(user.id, token);
 
                 return NextResponse.json({ token, userId: user.id });
             }
@@ -150,7 +155,7 @@ export async function POST(request: Request) {
                 }
 
                 const token = generateToken(user.id);
-                await createSession(user.id, token);
+                // await createSession(user.id, token);
 
                 return NextResponse.json({ token, userId: user.id });
             }
@@ -166,7 +171,7 @@ export async function POST(request: Request) {
                 // Validate Telegram hash
                 const checkString = Object.keys(telegramData)
                     .sort()
-                    .map(k => `${k}=${telegramData[k]}`)
+                    .map(k => `${k}=${telegramData[k as keyof typeof telegramData]}`)
                     .join('\n');
 
                 const secretKey = crypto.createHash('sha256')
@@ -199,7 +204,7 @@ export async function POST(request: Request) {
                 }
 
                 const token = generateToken(user.id);
-                await createSession(user.id, token);
+                // await createSession(user.id, token);
 
                 return NextResponse.json({ token, userId: user.id });
             }

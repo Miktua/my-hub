@@ -2,7 +2,6 @@
 import { useState } from 'react'
 import { Github, Linkedin, Mail } from 'lucide-react'
 import Image from 'next/image'
-import axios from 'axios'
 import { Card, CardContent } from '@/components/ui/card'
 export default function DeveloperProfile() {
   const [activeTab, setActiveTab] = useState('skills')
