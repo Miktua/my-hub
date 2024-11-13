@@ -11,11 +11,15 @@ datasource db {
 model user {
   id                          String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   username                    String?                  @db.VarChar(50)
-  email                       String?                  @db.VarChar(100)
+  full_name                   String?                  @db.VarChar(100)
+  email                       String?                  @unique @db.VarChar(100)
   role                        String?                  @db.VarChar(20)
   created_at                  DateTime                 @default(now()) @db.Timestamp(6)
   updated_at                  DateTime                 @default(now()) @db.Timestamp(6)
   telegram_id                 String?                  @db.VarChar(100)
   referred_by_id              String?
+  password                    String?
+  oauthProvider               String?                  @db.VarChar(20)
+  oauthId                     String?                  @db.VarChar(100)
 }
   //wallet_address              String                   @unique(map: "user_wallet_address_unique") @db.VarChar(100)

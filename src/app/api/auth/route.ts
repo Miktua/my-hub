@@ -21,23 +21,30 @@ const generateToken = (userId: string) => {
 
 // Helper function to create session
 const createSession = async (userId: string, token: string) => {
-    return await prisma.session.create({
-        data: {
-            userId,
-            token,
-            expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
-        }
-    });
+    // return await prisma.session.create({
+    //     data: {
+    //         userId,
+    //         token,
+    //         expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
+    //     }
+    // });
 };
-
+interface RequestBody {
+    type: string;
+    email?: string;
+    password?: string;
+    name?: string;
+    idToken?: string;
+    hash?: string;
+    telegramData?: any;
+}
 // Email-password sign in
 export async function POST(request: Request) {
     try {
-        const { type, ...data } = await request.json();
+        const { type, email, password, name, idToken, hash, telegramData }:RequestBody = await request.json();
 
         switch (type) {
             case 'email-password': {
-                const { email, password } = data;
                 if (!email || !password) {
                     return NextResponse.json(
                         { error: 'Email and password are required' },
@@ -53,8 +60,8 @@ export async function POST(request: Request) {
                     );
                 }
 
-                let validPassword = true
-                bcrypt.compare(password, user.password,(_,res)=>{validPassword=res});
+                let validPassword = Boolean(user.password)
+                user.password && bcrypt.compare(password, user.password,(_,res)=>{validPassword=res});
                 if (!validPassword) {
                     return NextResponse.json(
                         { error: 'Invalid credentials' },
@@ -69,7 +76,6 @@ export async function POST(request: Request) {
             }
 
             case 'email-password-signup': {
-                const { email, password, name } = data;
                 if (!email || !password || !name) {
                     return NextResponse.json(
                         { error: 'Email, password and name are required' },
@@ -97,7 +103,7 @@ export async function POST(request: Request) {
                     data: {
                         email,
                         password: hashedPassword,
-                        name
+                        username: name
                     }
                 });
 
@@ -108,7 +114,6 @@ export async function POST(request: Request) {
             }
 
             case 'oauth': {
-                const { idToken } = data;
                 if (!idToken) {
                     return NextResponse.json(
                         { error: 'ID token is required' },
@@ -137,7 +142,7 @@ export async function POST(request: Request) {
                     user = await prisma.user.create({
                         data: {
                             email: payload.email!,
-                            name: payload.name!,
+                            username: payload.name!,
                             oauthProvider: 'google',
                             oauthId: payload.sub
                         }
@@ -151,7 +156,6 @@ export async function POST(request: Request) {
             }
 
             case 'telegram': {
-                const { hash, ...telegramData } = data;
                 if (!hash || !telegramData) {
                     return NextResponse.json(
                         { error: 'Telegram data is required' },
@@ -181,14 +185,14 @@ export async function POST(request: Request) {
                 }
 
                 let user = await prisma.user.findFirst({
-                    where: { telegramId: telegramData.id.toString() }
+                    where: { telegram_id: telegramData.id.toString() }
                 });
 
                 if (!user) {
                     user = await prisma.user.create({
                         data: {
-                            telegramId: telegramData.id.toString(),
-                            name: `${telegramData.first_name} ${telegramData.last_name || ''}`.trim(),
+                            telegram_id: telegramData.id.toString(),
+                            full_name: `${telegramData.first_name} ${telegramData.last_name || ''}`.trim(),
                             username: telegramData.username
                         }
                     });
