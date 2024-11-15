@@ -2,7 +2,7 @@
 import { Markup, Telegraf } from 'telegraf';
 
 // Инициализация бота с использованием токена из переменных окружения
-const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN || '');
+const bot = new Telegraf(process.env.NEXT_TELEGRAM_BOT_TOKEN || '');
 const WEB_APP_URL = "t.me/Miktool_bot/Miktool";
 
 bot.command("inlinekb", ctx =>
