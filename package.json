@@ -39,7 +39,8 @@
     "react-dom": "19.0.0-rc-02c0e824-20241028",
     "sass": "^1.80.6",
     "tailwind-merge": "^2.5.4",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "telegraf": "^4.16.3"
   },
   "devDependencies": {
     "@types/node": "^20",
@@ -52,5 +53,4 @@
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }
-
 }
