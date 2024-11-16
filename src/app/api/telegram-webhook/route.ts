@@ -1,7 +1,5 @@
 // pages/api/telegram-webhook.ts
-import { NextApiResponse } from 'next';
-import { NextApiRequest } from 'next';
-import { NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server'
 import { Markup, Telegraf } from 'telegraf';
 
 // Инициализация бота с использованием токена из переменных окружения
@@ -19,13 +17,14 @@ bot.command("inlinekb", ctx =>
 
 bot.launch();
 
-export default async function POST(req: NextApiRequest, res: NextApiResponse) {
+export async function POST(request: NextRequest) {
     try {
-        await bot.handleUpdate(req.body, res);
-        return NextResponse.json({ message:'Updated' }, { status: 200 })
+        const body = await request.json()
+        if(!body) return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+        await bot.handleUpdate(body);
+        return new Response('Updated', { status: 200 })
     } catch (error) {
         console.error('Error handling update:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
     }
-
 }
