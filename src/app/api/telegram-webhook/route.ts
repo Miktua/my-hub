@@ -1,14 +1,17 @@
 // pages/api/telegram-webhook.ts
-const token = process.env.NEXT_TELEGRAM_BOT_TOKEN || ''
-if (!token) throw new Error('TELEGRAM_BOT_TOKEN environment variable not found.')
-
-const WEB_APP_URL = "t.me/Miktool_bot/Miktool";
-
 export const dynamic = 'force-dynamic'
 
 export const fetchCache = 'force-no-store'
 
 import { Bot, InlineKeyboard, webhookCallback } from 'grammy'
+
+const token = process.env.NEXT_TELEGRAM_BOT_TOKEN || ''
+const WEB_APP_URL = "t.me/Miktool_bot/Miktool";
+
+
+if (!token) throw new Error('TELEGRAM_BOT_TOKEN environment variable not found.')
+
+
 const bot = new Bot(token)
 
 bot.on('message:text', async (ctx) => {
@@ -17,7 +20,6 @@ bot.on('message:text', async (ctx) => {
 
 const inlineKeyboard = new InlineKeyboard().text("Launch", WEB_APP_URL);
 
-// Send a keyboard along with a message.
 bot.command("start", async (ctx) => {
   await ctx.reply("Hello! You can open the Miktool app by clicking the button below.", { reply_markup: inlineKeyboard });
 });
