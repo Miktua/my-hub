@@ -5,14 +5,14 @@ export const fetchCache = 'force-no-store'
 
 import { Bot, InlineKeyboard, webhookCallback } from 'grammy'
 
-const token = process.env.NEXT_TELEGRAM_BOT_TOKEN || ''
-const WEB_APP_URL = "t.me/Miktool_bot/Miktool";
+const TOKEN = process.env.NEXT_TELEGRAM_BOT_TOKEN || ''
+const WEB_APP_URL = process.env.NEXT_MIKTOOL_APP_URL || '';
 
 
-if (!token) throw new Error('TELEGRAM_BOT_TOKEN environment variable not found.')
+if (!TOKEN) throw new Error('TELEGRAM_BOT_TOKEN environment variable not found.')
 
 
-const bot = new Bot(token)
+const bot = new Bot(TOKEN)
 
 // bot.on('message:text', async (ctx) => {
 //   await ctx.reply(ctx.message.text)
