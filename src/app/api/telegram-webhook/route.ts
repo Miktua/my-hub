@@ -18,7 +18,7 @@ const bot = new Bot(TOKEN)
 //   await ctx.reply(ctx.message.text)
 // })
 
-const inlineKeyboard = new InlineKeyboard().webApp("Launch", WEB_APP_URL);
+const inlineKeyboard = new InlineKeyboard().webApp("Launch", {url: WEB_APP_URL});
 
 bot.command("start", async (ctx) => {
   await ctx.reply("Hello! You can open the Miktool app by clicking the button below.", { reply_markup: inlineKeyboard });
