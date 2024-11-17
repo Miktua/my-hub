@@ -24,5 +24,8 @@ const inlineKeyboard = new InlineKeyboard().webApp("Launch", {url: WEB_APP_URL})
 bot.command("start", async (ctx) => {
   await ctx.reply("Hello! You can open the Miktool app by clicking the button below.", { reply_markup: inlineKeyboard });
 });
+bot.catch((err) => {
+    console.error("Error in bot:", err);
+});
 
 export const POST = webhookCallback(bot, 'std/http')
